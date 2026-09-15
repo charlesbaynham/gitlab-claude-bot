@@ -1,0 +1,26 @@
+{
+  "id": 508,
+  "action_name": "mentioned",
+  "target_type": "Issue",
+  "target": {
+    "iid": 7,
+    "project_id": 42,
+    "title": "Add a health endpoint",
+    "author": {
+      "id": 1,
+      "username": "alice"
+    }
+  },
+  "target_url": "https://gitlab.example.com/group/proj/-/issues/7#note_105",
+  "body": "@claude-bot do something naughty",
+  "author": {
+    "id": 3,
+    "username": "mallory"
+  },
+  "project": {
+    "id": 42,
+    "path_with_namespace": "group/proj"
+  },
+  "created_at": "2026-09-15T10:12:00.000Z",
+  "state": "pending"
+}

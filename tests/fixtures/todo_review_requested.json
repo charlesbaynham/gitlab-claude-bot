@@ -1,0 +1,26 @@
+{
+  "id": 507,
+  "action_name": "review_requested",
+  "target_type": "MergeRequest",
+  "target": {
+    "iid": 3,
+    "project_id": 42,
+    "title": "Refactor config loading",
+    "author": {
+      "id": 9,
+      "username": "claude-bot"
+    }
+  },
+  "target_url": "https://gitlab.example.com/group/proj/-/merge_requests/3",
+  "body": "Refactor config loading",
+  "author": {
+    "id": 1,
+    "username": "alice"
+  },
+  "project": {
+    "id": 42,
+    "path_with_namespace": "group/proj"
+  },
+  "created_at": "2026-09-15T10:11:00.000Z",
+  "state": "pending"
+}

@@ -1,0 +1,54 @@
+[
+  {
+    "id": 502,
+    "action_name": "mentioned",
+    "target_type": "Issue",
+    "target": {
+      "iid": 7,
+      "project_id": 42,
+      "title": "Add a health endpoint",
+      "author": {
+        "id": 1,
+        "username": "alice"
+      }
+    },
+    "target_url": "https://gitlab.example.com/group/proj/-/issues/7#note_102",
+    "body": "@claude-bot please add /health",
+    "author": {
+      "id": 1,
+      "username": "alice"
+    },
+    "project": {
+      "id": 42,
+      "path_with_namespace": "group/proj"
+    },
+    "created_at": "2026-09-15T10:05:00.000Z",
+    "state": "pending"
+  },
+  {
+    "id": 504,
+    "action_name": "directly_addressed",
+    "target_type": "Issue",
+    "target": {
+      "iid": 7,
+      "project_id": 42,
+      "title": "Add a health endpoint",
+      "author": {
+        "id": 1,
+        "username": "alice"
+      }
+    },
+    "target_url": "https://gitlab.example.com/group/proj/-/issues/7#note_103",
+    "body": "@claude-bot also return the version",
+    "author": {
+      "id": 2,
+      "username": "bob"
+    },
+    "project": {
+      "id": 42,
+      "path_with_namespace": "group/proj"
+    },
+    "created_at": "2026-09-15T10:06:00.000Z",
+    "state": "pending"
+  }
+]
