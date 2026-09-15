@@ -75,14 +75,16 @@ def test_ignored_todos_are_marked_done_without_a_job(tmp_path: Path, ran: list) 
     assert ran == []
 
 
-def test_an_already_acknowledged_trigger_is_skipped(tmp_path: Path, ran: list) -> None:
-    gl = gitlab(fixture("todo_assigned_issue"))
-    gl.eyes.add((42, "issues", 7, None, BOT.id))
+def test_an_already_acknowledged_note_is_skipped(tmp_path: Path, ran: list) -> None:
+    gl = gitlab(fixture("todo_note_mention_issue"))
+    todo = fixture("todo_note_mention_issue")
+    note_id = int(todo["target_url"].rsplit("#note_", 1)[1])
+    gl.eyes.add((todo["project"]["id"], "issues", todo["target"]["iid"], note_id, BOT.id))
 
     assert main.poll_once(gl, config(tmp_path), BOT, State(), status(), NOW) == 0
 
     assert ran == []
-    assert gl.done == [501]
+    assert gl.done == [todo["id"]]
 
 
 def test_the_state_file_is_written_every_poll(tmp_path: Path, ran: list) -> None:

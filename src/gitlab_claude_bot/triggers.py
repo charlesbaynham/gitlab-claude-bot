@@ -48,9 +48,11 @@ def acknowledge(gl: GitLab, bot_id: int, trigger: Trigger) -> bool:
         fresh += gl.award_eyes(t.project_id, t.kind, t.iid, note_id)
     for todo_id in trigger.todo_ids:
         gl.mark_todo_done(todo_id)
+    # an award on the target itself outlives the trigger, so only note awards can mean "seen"
+    seen = not fresh and bool(trigger.note_ids)
     where = f"{t.key} notes {list(trigger.note_ids) or 'target'}"
-    if fresh:
-        log.info("acknowledged %s (%s by @%s)", where, trigger.action, trigger.author)
-    else:
+    if seen:
         log.info("already acknowledged %s, skipping", where)
-    return fresh > 0
+    else:
+        log.info("acknowledged %s (%s by @%s)", where, trigger.action, trigger.author)
+    return not seen

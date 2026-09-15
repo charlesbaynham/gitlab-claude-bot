@@ -56,11 +56,12 @@ def test_someone_elses_eyes_do_not_count() -> None:
     assert acknowledge(gl, BOT.id, trigger((102,))) is True
 
 
-def test_no_notes_acknowledges_the_target_itself() -> None:
+def test_no_notes_acknowledges_the_target_itself_and_never_skips() -> None:
     gl = FakeGitLab()
     assert acknowledge(gl, BOT.id, trigger()) is True
     assert gl.eyes == {(42, "issues", 7, None, BOT.id)}
-    assert acknowledge(gl, BOT.id, trigger()) is False
+    # a re-assignment is a fresh to-do; the old 👀 on the issue must not swallow it
+    assert acknowledge(gl, BOT.id, trigger()) is True
 
 
 def test_lost_award_race_counts_as_seen() -> None:
