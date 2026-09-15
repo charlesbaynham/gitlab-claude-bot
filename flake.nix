@@ -20,7 +20,7 @@
         src = ./.;
         build-system = [ py.hatchling ];
         dependencies = [ py.httpx ];
-        nativeCheckInputs = [ py.pytestCheckHook ];
+        nativeCheckInputs = [ py.pytestCheckHook pkgs.git ];
       };
     in
     nixpkgs.lib.recursiveUpdate
