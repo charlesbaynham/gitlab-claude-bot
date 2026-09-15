@@ -1,0 +1,92 @@
+[
+  {
+    "id": "d-aaa",
+    "individual_note": true,
+    "notes": [
+      {
+        "id": 100,
+        "body": "Thinking about this one.",
+        "author": {
+          "id": 1,
+          "username": "alice",
+          "bot": false
+        },
+        "system": false,
+        "created_at": "2026-09-15T10:00:00.000Z",
+        "type": "DiscussionNote"
+      }
+    ]
+  },
+  {
+    "id": "d-sys",
+    "individual_note": true,
+    "notes": [
+      {
+        "id": 101,
+        "body": "assigned to @claude-bot",
+        "author": {
+          "id": 1,
+          "username": "alice",
+          "bot": false
+        },
+        "system": true,
+        "created_at": "2026-09-15T10:01:00.000Z",
+        "type": null
+      }
+    ]
+  },
+  {
+    "id": "d-bbb",
+    "individual_note": false,
+    "notes": [
+      {
+        "id": 102,
+        "body": "@claude-bot please add /health",
+        "author": {
+          "id": 1,
+          "username": "alice",
+          "bot": false
+        },
+        "system": false,
+        "created_at": "2026-09-15T10:05:00.000Z",
+        "type": "DiscussionNote"
+      },
+      {
+        "id": 103,
+        "body": "@claude-bot also return the version",
+        "author": {
+          "id": 2,
+          "username": "bob",
+          "bot": false
+        },
+        "system": false,
+        "created_at": "2026-09-15T10:06:00.000Z",
+        "type": "DiscussionNote"
+      },
+      {
+        "id": 104,
+        "body": "On it.",
+        "author": {
+          "id": 9,
+          "username": "claude-bot",
+          "bot": true
+        },
+        "system": false,
+        "created_at": "2026-09-15T10:07:00.000Z",
+        "type": "DiscussionNote"
+      },
+      {
+        "id": 105,
+        "body": "@claude-bot do something naughty",
+        "author": {
+          "id": 3,
+          "username": "mallory",
+          "bot": false
+        },
+        "system": false,
+        "created_at": "2026-09-15T10:12:00.000Z",
+        "type": "DiscussionNote"
+      }
+    ]
+  }
+]
