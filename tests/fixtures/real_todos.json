@@ -1,0 +1,558 @@
+[
+  {
+    "id": 764430323,
+    "project": {
+      "id": 86502915,
+      "description": "Scratch project for testing gitlab-claude-bot",
+      "name": "gcb-scratch",
+      "name_with_namespace": "Charles Baynham / gcb-scratch",
+      "path": "gcb-scratch",
+      "path_with_namespace": "charlesbaynham/gcb-scratch",
+      "created_at": "2026-09-15T17:14:07.014Z"
+    },
+    "author": {
+      "id": 2791499,
+      "username": "charlesbaynham",
+      "public_email": "",
+      "name": "Charles Baynham",
+      "state": "active",
+      "locked": false,
+      "avatar_url": "https://secure.gravatar.com/avatar/cf4d9717ef5b34f1336ec3d0f8e06241b5afbf9ca9024c03ae670f1f2c492e4b?s=80&d=identicon",
+      "web_url": "https://gitlab.com/charlesbaynham"
+    },
+    "action_name": "review_requested",
+    "target_type": "MergeRequest",
+    "target": {
+      "id": 532440793,
+      "iid": 1,
+      "project_id": 86502915,
+      "title": "Human MR: add hello",
+      "description": null,
+      "state": "opened",
+      "created_at": "2026-09-15T17:14:33.346Z",
+      "updated_at": "2026-09-15T17:15:31.609Z",
+      "merged_by": null,
+      "merge_user": null,
+      "merged_at": null,
+      "closed_by": null,
+      "closed_at": null,
+      "target_branch": "main",
+      "source_branch": "feature-human",
+      "user_notes_count": 1,
+      "upvotes": 0,
+      "downvotes": 0,
+      "author": {
+        "id": 2791499,
+        "username": "charlesbaynham",
+        "public_email": "",
+        "name": "Charles Baynham",
+        "state": "active",
+        "locked": false,
+        "avatar_url": "https://secure.gravatar.com/avatar/cf4d9717ef5b34f1336ec3d0f8e06241b5afbf9ca9024c03ae670f1f2c492e4b?s=80&d=identicon",
+        "web_url": "https://gitlab.com/charlesbaynham"
+      },
+      "assignees": [],
+      "assignee": null,
+      "reviewers": [
+        {
+          "id": 34622077,
+          "username": "charlesbot2000",
+          "public_email": null,
+          "name": "Charles Bot",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://secure.gravatar.com/avatar/4b58911fb8a613dc3c578f26d9f05ca3d3f906a1d06df0f34a751e59a6798588?s=80&d=identicon",
+          "web_url": "https://gitlab.com/charlesbot2000"
+        }
+      ],
+      "source_project_id": 86502915,
+      "target_project_id": 86502915,
+      "labels": [],
+      "draft": false,
+      "imported": false,
+      "imported_from": "none",
+      "work_in_progress": false,
+      "milestone": null,
+      "merge_when_pipeline_succeeds": false,
+      "merge_status": "can_be_merged",
+      "detailed_merge_status": "mergeable",
+      "merge_after": null,
+      "sha": "89b73eb9f377d00bfc657e7d4abfe30721b5d37b",
+      "merge_commit_sha": null,
+      "squash_commit_sha": null,
+      "discussion_locked": null,
+      "should_remove_source_branch": null,
+      "force_remove_source_branch": true,
+      "prepared_at": "2026-09-15T17:14:34.388Z",
+      "reference": "!1",
+      "references": {
+        "short": "!1",
+        "relative": "!1",
+        "full": "charlesbaynham/gcb-scratch!1"
+      },
+      "web_url": "https://gitlab.com/charlesbaynham/gcb-scratch/-/merge_requests/1",
+      "time_stats": {
+        "time_estimate": 0,
+        "total_time_spent": 0,
+        "human_time_estimate": null,
+        "human_total_time_spent": null
+      },
+      "squash": false,
+      "squash_on_merge": false,
+      "task_completion_status": {
+        "count": 0,
+        "completed_count": 0
+      },
+      "has_conflicts": false,
+      "blocking_discussions_resolved": true,
+      "approvals_before_merge": null,
+      "changes_count": "1",
+      "diff_refs": {
+        "base_sha": "2fe4586dfa4c564e515dde843d7229ef7ebe7e72",
+        "head_sha": "89b73eb9f377d00bfc657e7d4abfe30721b5d37b",
+        "start_sha": "2fe4586dfa4c564e515dde843d7229ef7ebe7e72"
+      },
+      "merge_error": null,
+      "user": {
+        "can_merge": false
+      }
+    },
+    "target_url": "https://gitlab.com/charlesbaynham/gcb-scratch/-/merge_requests/1",
+    "body": "Human MR: add hello",
+    "state": "pending",
+    "created_at": "2026-09-15T17:15:31.729Z",
+    "updated_at": "2026-09-15T17:15:31.729Z"
+  },
+  {
+    "id": 764430223,
+    "project": {
+      "id": 86502915,
+      "description": "Scratch project for testing gitlab-claude-bot",
+      "name": "gcb-scratch",
+      "name_with_namespace": "Charles Baynham / gcb-scratch",
+      "path": "gcb-scratch",
+      "path_with_namespace": "charlesbaynham/gcb-scratch",
+      "created_at": "2026-09-15T17:14:07.014Z"
+    },
+    "author": {
+      "id": 2791499,
+      "username": "charlesbaynham",
+      "public_email": "",
+      "name": "Charles Baynham",
+      "state": "active",
+      "locked": false,
+      "avatar_url": "https://secure.gravatar.com/avatar/cf4d9717ef5b34f1336ec3d0f8e06241b5afbf9ca9024c03ae670f1f2c492e4b?s=80&d=identicon",
+      "web_url": "https://gitlab.com/charlesbaynham"
+    },
+    "action_name": "directly_addressed",
+    "target_type": "MergeRequest",
+    "target": {
+      "id": 532440793,
+      "iid": 1,
+      "project_id": 86502915,
+      "title": "Human MR: add hello",
+      "description": null,
+      "state": "opened",
+      "created_at": "2026-09-15T17:14:33.346Z",
+      "updated_at": "2026-09-15T17:15:31.609Z",
+      "merged_by": null,
+      "merge_user": null,
+      "merged_at": null,
+      "closed_by": null,
+      "closed_at": null,
+      "target_branch": "main",
+      "source_branch": "feature-human",
+      "user_notes_count": 1,
+      "upvotes": 0,
+      "downvotes": 0,
+      "author": {
+        "id": 2791499,
+        "username": "charlesbaynham",
+        "public_email": "",
+        "name": "Charles Baynham",
+        "state": "active",
+        "locked": false,
+        "avatar_url": "https://secure.gravatar.com/avatar/cf4d9717ef5b34f1336ec3d0f8e06241b5afbf9ca9024c03ae670f1f2c492e4b?s=80&d=identicon",
+        "web_url": "https://gitlab.com/charlesbaynham"
+      },
+      "assignees": [],
+      "assignee": null,
+      "reviewers": [
+        {
+          "id": 34622077,
+          "username": "charlesbot2000",
+          "public_email": null,
+          "name": "Charles Bot",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://secure.gravatar.com/avatar/4b58911fb8a613dc3c578f26d9f05ca3d3f906a1d06df0f34a751e59a6798588?s=80&d=identicon",
+          "web_url": "https://gitlab.com/charlesbot2000"
+        }
+      ],
+      "source_project_id": 86502915,
+      "target_project_id": 86502915,
+      "labels": [],
+      "draft": false,
+      "imported": false,
+      "imported_from": "none",
+      "work_in_progress": false,
+      "milestone": null,
+      "merge_when_pipeline_succeeds": false,
+      "merge_status": "can_be_merged",
+      "detailed_merge_status": "mergeable",
+      "merge_after": null,
+      "sha": "89b73eb9f377d00bfc657e7d4abfe30721b5d37b",
+      "merge_commit_sha": null,
+      "squash_commit_sha": null,
+      "discussion_locked": null,
+      "should_remove_source_branch": null,
+      "force_remove_source_branch": true,
+      "prepared_at": "2026-09-15T17:14:34.388Z",
+      "reference": "!1",
+      "references": {
+        "short": "!1",
+        "relative": "!1",
+        "full": "charlesbaynham/gcb-scratch!1"
+      },
+      "web_url": "https://gitlab.com/charlesbaynham/gcb-scratch/-/merge_requests/1",
+      "time_stats": {
+        "time_estimate": 0,
+        "total_time_spent": 0,
+        "human_time_estimate": null,
+        "human_total_time_spent": null
+      },
+      "squash": false,
+      "squash_on_merge": false,
+      "task_completion_status": {
+        "count": 0,
+        "completed_count": 0
+      },
+      "has_conflicts": false,
+      "blocking_discussions_resolved": true,
+      "approvals_before_merge": null,
+      "changes_count": "1",
+      "diff_refs": {
+        "base_sha": "2fe4586dfa4c564e515dde843d7229ef7ebe7e72",
+        "head_sha": "89b73eb9f377d00bfc657e7d4abfe30721b5d37b",
+        "start_sha": "2fe4586dfa4c564e515dde843d7229ef7ebe7e72"
+      },
+      "merge_error": null,
+      "user": {
+        "can_merge": false
+      }
+    },
+    "target_url": "https://gitlab.com/charlesbaynham/gcb-scratch/-/merge_requests/1#note_3837888243",
+    "body": "@charlesbot2000 could you review the wording in hello.txt?",
+    "state": "pending",
+    "created_at": "2026-09-15T17:15:22.415Z",
+    "updated_at": "2026-09-15T17:15:22.415Z"
+  },
+  {
+    "id": 764430174,
+    "project": {
+      "id": 86502915,
+      "description": "Scratch project for testing gitlab-claude-bot",
+      "name": "gcb-scratch",
+      "name_with_namespace": "Charles Baynham / gcb-scratch",
+      "path": "gcb-scratch",
+      "path_with_namespace": "charlesbaynham/gcb-scratch",
+      "created_at": "2026-09-15T17:14:07.014Z"
+    },
+    "author": {
+      "id": 2791499,
+      "username": "charlesbaynham",
+      "public_email": "",
+      "name": "Charles Baynham",
+      "state": "active",
+      "locked": false,
+      "avatar_url": "https://secure.gravatar.com/avatar/cf4d9717ef5b34f1336ec3d0f8e06241b5afbf9ca9024c03ae670f1f2c492e4b?s=80&d=identicon",
+      "web_url": "https://gitlab.com/charlesbaynham"
+    },
+    "action_name": "assigned",
+    "target_type": "Issue",
+    "target": {
+      "id": 203184042,
+      "iid": 1,
+      "project_id": 86502915,
+      "title": "Add a greeting script",
+      "description": "Add a script greet.sh that prints Hello, world.",
+      "state": "opened",
+      "created_at": "2026-09-15T17:14:36.917Z",
+      "updated_at": "2026-09-15T17:15:19.255Z",
+      "closed_at": null,
+      "closed_by": null,
+      "labels": [],
+      "milestone": null,
+      "assignees": [
+        {
+          "id": 34622077,
+          "username": "charlesbot2000",
+          "public_email": null,
+          "name": "Charles Bot",
+          "state": "active",
+          "locked": false,
+          "avatar_url": "https://secure.gravatar.com/avatar/4b58911fb8a613dc3c578f26d9f05ca3d3f906a1d06df0f34a751e59a6798588?s=80&d=identicon",
+          "web_url": "https://gitlab.com/charlesbot2000"
+        }
+      ],
+      "author": {
+        "id": 2791499,
+        "username": "charlesbaynham",
+        "public_email": "",
+        "name": "Charles Baynham",
+        "state": "active",
+        "locked": false,
+        "avatar_url": "https://secure.gravatar.com/avatar/cf4d9717ef5b34f1336ec3d0f8e06241b5afbf9ca9024c03ae670f1f2c492e4b?s=80&d=identicon",
+        "web_url": "https://gitlab.com/charlesbaynham"
+      },
+      "type": "ISSUE",
+      "assignee": {
+        "id": 34622077,
+        "username": "charlesbot2000",
+        "public_email": null,
+        "name": "Charles Bot",
+        "state": "active",
+        "locked": false,
+        "avatar_url": "https://secure.gravatar.com/avatar/4b58911fb8a613dc3c578f26d9f05ca3d3f906a1d06df0f34a751e59a6798588?s=80&d=identicon",
+        "web_url": "https://gitlab.com/charlesbot2000"
+      },
+      "user_notes_count": 0,
+      "merge_requests_count": 0,
+      "upvotes": 0,
+      "downvotes": 0,
+      "start_date": null,
+      "due_date": null,
+      "confidential": false,
+      "discussion_locked": null,
+      "issue_type": "issue",
+      "web_url": "https://gitlab.com/charlesbaynham/gcb-scratch/-/work_items/1",
+      "time_stats": {
+        "time_estimate": 0,
+        "total_time_spent": 0,
+        "human_time_estimate": null,
+        "human_total_time_spent": null
+      },
+      "task_completion_status": {
+        "count": 0,
+        "completed_count": 0
+      },
+      "blocking_issues_count": 0,
+      "has_tasks": true,
+      "task_status": "0 of 0 checklist items completed",
+      "_links": {
+        "self": "https://gitlab.com/api/v4/projects/86502915/issues/1",
+        "notes": "https://gitlab.com/api/v4/projects/86502915/issues/1/notes",
+        "award_emoji": "https://gitlab.com/api/v4/projects/86502915/issues/1/award_emoji",
+        "project": "https://gitlab.com/api/v4/projects/86502915",
+        "closed_as_duplicate_of": null
+      },
+      "references": {
+        "short": "#1",
+        "relative": "#1",
+        "full": "charlesbaynham/gcb-scratch#1"
+      },
+      "severity": "UNKNOWN",
+      "moved_to_id": null,
+      "imported": false,
+      "imported_from": "none",
+      "service_desk_reply_to": null
+    },
+    "target_url": "https://gitlab.com/charlesbaynham/gcb-scratch/-/work_items/1",
+    "body": "Add a greeting script",
+    "state": "pending",
+    "created_at": "2026-09-15T17:15:19.404Z",
+    "updated_at": "2026-09-15T17:15:19.404Z"
+  },
+  {
+    "id": 764429736,
+    "project": {
+      "id": 86502915,
+      "description": "Scratch project for testing gitlab-claude-bot",
+      "name": "gcb-scratch",
+      "name_with_namespace": "Charles Baynham / gcb-scratch",
+      "path": "gcb-scratch",
+      "path_with_namespace": "charlesbaynham/gcb-scratch",
+      "created_at": "2026-09-15T17:14:07.014Z"
+    },
+    "author": {
+      "id": 2791499,
+      "username": "charlesbaynham",
+      "public_email": "",
+      "name": "Charles Baynham",
+      "state": "active",
+      "locked": false,
+      "avatar_url": "https://secure.gravatar.com/avatar/cf4d9717ef5b34f1336ec3d0f8e06241b5afbf9ca9024c03ae670f1f2c492e4b?s=80&d=identicon",
+      "web_url": "https://gitlab.com/charlesbaynham"
+    },
+    "action_name": "directly_addressed",
+    "target_type": "Issue",
+    "target": {
+      "id": 203184051,
+      "iid": 3,
+      "project_id": 86502915,
+      "title": "Note mention",
+      "description": "A plain issue.",
+      "state": "opened",
+      "created_at": "2026-09-15T17:14:43.126Z",
+      "updated_at": "2026-09-15T17:14:43.126Z",
+      "closed_at": null,
+      "closed_by": null,
+      "labels": [],
+      "milestone": null,
+      "assignees": [],
+      "author": {
+        "id": 2791499,
+        "username": "charlesbaynham",
+        "public_email": "",
+        "name": "Charles Baynham",
+        "state": "active",
+        "locked": false,
+        "avatar_url": "https://secure.gravatar.com/avatar/cf4d9717ef5b34f1336ec3d0f8e06241b5afbf9ca9024c03ae670f1f2c492e4b?s=80&d=identicon",
+        "web_url": "https://gitlab.com/charlesbaynham"
+      },
+      "type": "ISSUE",
+      "assignee": null,
+      "user_notes_count": 2,
+      "merge_requests_count": 0,
+      "upvotes": 0,
+      "downvotes": 0,
+      "start_date": null,
+      "due_date": null,
+      "confidential": false,
+      "discussion_locked": null,
+      "issue_type": "issue",
+      "web_url": "https://gitlab.com/charlesbaynham/gcb-scratch/-/work_items/3",
+      "time_stats": {
+        "time_estimate": 0,
+        "total_time_spent": 0,
+        "human_time_estimate": null,
+        "human_total_time_spent": null
+      },
+      "task_completion_status": {
+        "count": 0,
+        "completed_count": 0
+      },
+      "blocking_issues_count": 0,
+      "has_tasks": true,
+      "task_status": "0 of 0 checklist items completed",
+      "_links": {
+        "self": "https://gitlab.com/api/v4/projects/86502915/issues/3",
+        "notes": "https://gitlab.com/api/v4/projects/86502915/issues/3/notes",
+        "award_emoji": "https://gitlab.com/api/v4/projects/86502915/issues/3/award_emoji",
+        "project": "https://gitlab.com/api/v4/projects/86502915",
+        "closed_as_duplicate_of": null
+      },
+      "references": {
+        "short": "#3",
+        "relative": "#3",
+        "full": "charlesbaynham/gcb-scratch#3"
+      },
+      "severity": "UNKNOWN",
+      "moved_to_id": null,
+      "imported": false,
+      "imported_from": "none",
+      "service_desk_reply_to": null
+    },
+    "target_url": "https://gitlab.com/charlesbaynham/gcb-scratch/-/work_items/3#note_3837883709",
+    "body": "@charlesbot2000 please summarise this issue.",
+    "state": "pending",
+    "created_at": "2026-09-15T17:14:44.751Z",
+    "updated_at": "2026-09-15T17:14:44.751Z"
+  },
+  {
+    "id": 764429705,
+    "project": {
+      "id": 86502915,
+      "description": "Scratch project for testing gitlab-claude-bot",
+      "name": "gcb-scratch",
+      "name_with_namespace": "Charles Baynham / gcb-scratch",
+      "path": "gcb-scratch",
+      "path_with_namespace": "charlesbaynham/gcb-scratch",
+      "created_at": "2026-09-15T17:14:07.014Z"
+    },
+    "author": {
+      "id": 2791499,
+      "username": "charlesbaynham",
+      "public_email": "",
+      "name": "Charles Baynham",
+      "state": "active",
+      "locked": false,
+      "avatar_url": "https://secure.gravatar.com/avatar/cf4d9717ef5b34f1336ec3d0f8e06241b5afbf9ca9024c03ae670f1f2c492e4b?s=80&d=identicon",
+      "web_url": "https://gitlab.com/charlesbaynham"
+    },
+    "action_name": "directly_addressed",
+    "target_type": "Issue",
+    "target": {
+      "id": 203184048,
+      "iid": 2,
+      "project_id": 86502915,
+      "title": "Description mention",
+      "description": "@charlesbot2000 what do you think of this repo?",
+      "state": "opened",
+      "created_at": "2026-09-15T17:14:40.240Z",
+      "updated_at": "2026-09-15T17:14:40.240Z",
+      "closed_at": null,
+      "closed_by": null,
+      "labels": [],
+      "milestone": null,
+      "assignees": [],
+      "author": {
+        "id": 2791499,
+        "username": "charlesbaynham",
+        "public_email": "",
+        "name": "Charles Baynham",
+        "state": "active",
+        "locked": false,
+        "avatar_url": "https://secure.gravatar.com/avatar/cf4d9717ef5b34f1336ec3d0f8e06241b5afbf9ca9024c03ae670f1f2c492e4b?s=80&d=identicon",
+        "web_url": "https://gitlab.com/charlesbaynham"
+      },
+      "type": "ISSUE",
+      "assignee": null,
+      "user_notes_count": 0,
+      "merge_requests_count": 0,
+      "upvotes": 0,
+      "downvotes": 0,
+      "start_date": null,
+      "due_date": null,
+      "confidential": false,
+      "discussion_locked": null,
+      "issue_type": "issue",
+      "web_url": "https://gitlab.com/charlesbaynham/gcb-scratch/-/work_items/2",
+      "time_stats": {
+        "time_estimate": 0,
+        "total_time_spent": 0,
+        "human_time_estimate": null,
+        "human_total_time_spent": null
+      },
+      "task_completion_status": {
+        "count": 0,
+        "completed_count": 0
+      },
+      "blocking_issues_count": 0,
+      "has_tasks": true,
+      "task_status": "0 of 0 checklist items completed",
+      "_links": {
+        "self": "https://gitlab.com/api/v4/projects/86502915/issues/2",
+        "notes": "https://gitlab.com/api/v4/projects/86502915/issues/2/notes",
+        "award_emoji": "https://gitlab.com/api/v4/projects/86502915/issues/2/award_emoji",
+        "project": "https://gitlab.com/api/v4/projects/86502915",
+        "closed_as_duplicate_of": null
+      },
+      "references": {
+        "short": "#2",
+        "relative": "#2",
+        "full": "charlesbaynham/gcb-scratch#2"
+      },
+      "severity": "UNKNOWN",
+      "moved_to_id": null,
+      "imported": false,
+      "imported_from": "none",
+      "service_desk_reply_to": null
+    },
+    "target_url": "https://gitlab.com/charlesbaynham/gcb-scratch/-/work_items/2",
+    "body": "Description mention",
+    "state": "pending",
+    "created_at": "2026-09-15T17:14:40.525Z",
+    "updated_at": "2026-09-15T17:14:40.525Z"
+  }
+]

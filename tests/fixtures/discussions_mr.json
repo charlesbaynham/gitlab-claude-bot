@@ -1,0 +1,92 @@
+[
+  {
+    "id": "m-1",
+    "individual_note": false,
+    "notes": [
+      {
+        "id": 200,
+        "body": "Looks good, but rename the function.",
+        "author": {
+          "id": 1,
+          "username": "alice",
+          "bot": false
+        },
+        "system": false,
+        "created_at": "2026-09-15T11:00:00.000Z",
+        "type": "DiscussionNote"
+      },
+      {
+        "id": 201,
+        "body": "Done.",
+        "author": {
+          "id": 9,
+          "username": "claude-bot",
+          "bot": true
+        },
+        "system": false,
+        "created_at": "2026-09-15T11:01:00.000Z",
+        "type": "DiscussionNote"
+      }
+    ]
+  },
+  {
+    "id": "m-sys",
+    "individual_note": true,
+    "notes": [
+      {
+        "id": 202,
+        "body": "added 1 commit",
+        "author": {
+          "id": 9,
+          "username": "claude-bot",
+          "bot": true
+        },
+        "system": true,
+        "created_at": "2026-09-15T11:02:00.000Z",
+        "type": null
+      }
+    ]
+  },
+  {
+    "id": "m-2",
+    "individual_note": false,
+    "notes": [
+      {
+        "id": 203,
+        "body": "Can you add a test?",
+        "author": {
+          "id": 2,
+          "username": "bob",
+          "bot": false
+        },
+        "system": false,
+        "created_at": "2026-09-15T11:05:00.000Z",
+        "type": "DiscussionNote"
+      },
+      {
+        "id": 204,
+        "body": "hi",
+        "author": {
+          "id": 3,
+          "username": "mallory",
+          "bot": false
+        },
+        "system": false,
+        "created_at": "2026-09-15T11:06:00.000Z",
+        "type": "DiscussionNote"
+      },
+      {
+        "id": 205,
+        "body": "And update the docs.",
+        "author": {
+          "id": 1,
+          "username": "alice",
+          "bot": false
+        },
+        "system": false,
+        "created_at": "2026-09-15T11:07:00.000Z",
+        "type": "DiscussionNote"
+      }
+    ]
+  }
+]
