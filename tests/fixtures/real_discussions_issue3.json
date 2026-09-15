@@ -1,0 +1,72 @@
+[
+ {
+  "id": "a44970ec863d0eb2b6b582f1189747ffc1353136",
+  "individual_note": true,
+  "resolvable": false,
+  "notes": [
+   {
+    "id": 3837883644,
+    "type": null,
+    "body": "Unrelated first comment.",
+    "author": {
+     "id": 2791499,
+     "username": "charlesbaynham",
+     "public_email": "",
+     "name": "Charles Baynham",
+     "state": "active",
+     "locked": false,
+     "avatar_url": "https://secure.gravatar.com/avatar/cf4d9717ef5b34f1336ec3d0f8e06241b5afbf9ca9024c03ae670f1f2c492e4b?s=80&d=identicon",
+     "web_url": "https://gitlab.com/charlesbaynham"
+    },
+    "created_at": "2026-09-15T17:14:43.947Z",
+    "updated_at": "2026-09-15T17:14:43.947Z",
+    "system": false,
+    "noteable_id": 203184051,
+    "noteable_type": "Issue",
+    "project_id": 86502915,
+    "resolvable": false,
+    "confidential": false,
+    "internal": false,
+    "imported": false,
+    "imported_from": "none",
+    "noteable_iid": 3,
+    "commands_changes": {}
+   }
+  ]
+ },
+ {
+  "id": "cfd71500a0afad2da797b2966de93a2cdc3af71a",
+  "individual_note": true,
+  "resolvable": false,
+  "notes": [
+   {
+    "id": 3837883709,
+    "type": null,
+    "body": "@charlesbot2000 please summarise this issue.",
+    "author": {
+     "id": 2791499,
+     "username": "charlesbaynham",
+     "public_email": "",
+     "name": "Charles Baynham",
+     "state": "active",
+     "locked": false,
+     "avatar_url": "https://secure.gravatar.com/avatar/cf4d9717ef5b34f1336ec3d0f8e06241b5afbf9ca9024c03ae670f1f2c492e4b?s=80&d=identicon",
+     "web_url": "https://gitlab.com/charlesbaynham"
+    },
+    "created_at": "2026-09-15T17:14:44.660Z",
+    "updated_at": "2026-09-15T17:16:01.006Z",
+    "system": false,
+    "noteable_id": 203184051,
+    "noteable_type": "Issue",
+    "project_id": 86502915,
+    "resolvable": false,
+    "confidential": false,
+    "internal": false,
+    "imported": false,
+    "imported_from": "none",
+    "noteable_iid": 3,
+    "commands_changes": {}
+   }
+  ]
+ }
+]
