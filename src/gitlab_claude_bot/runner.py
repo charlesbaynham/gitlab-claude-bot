@@ -24,6 +24,10 @@ class JobError(Exception):
     pass
 
 
+def container_name(job_name: str) -> str:
+    return f"gcb-{job_name}"
+
+
 def _unlock_and_retry(func: Callable[..., Any], path: str, exc: BaseException) -> None:
     os.chmod(os.path.dirname(path), 0o700)
     if os.path.isdir(path) and not os.path.islink(path):
@@ -166,7 +170,7 @@ def docker_command(cfg: Config, jobdir: Path, system_prompt: str, bot: User, job
     env_args += [arg for name, value in env_values.items() for arg in ("-e", f"{name}={value}")]
     budget = ["--max-budget-usd", str(cfg.max_budget_usd)] if cfg.max_budget_usd is not None else []
     return [
-        "docker", "run", "--rm", "--name", f"gcb-{job_name}",
+        "docker", "run", "--rm", "--name", container_name(job_name),
         "--user", "1000:1000", "--read-only",
         "--tmpfs", "/home/agent:rw,uid=1000,gid=1000,size=512m",
         "--tmpfs", "/tmp:rw,size=1g",
@@ -224,7 +228,7 @@ def run_agent(cfg: Config, jobdir: Path, system_prompt: str, user_prompt: str, b
         result = _parse_result(proc.stdout, proc.returncode, proc.stderr[-STDERR_TAIL:], duration)
     except subprocess.TimeoutExpired as timeout:
         duration = time.monotonic() - started
-        subprocess.run(["docker", "rm", "-f", f"gcb-{job_name}"], capture_output=True, env=env, check=False)
+        subprocess.run(["docker", "rm", "-f", container_name(job_name)], capture_output=True, env=env, check=False)
         stderr = timeout.stderr or b""
         stderr_text = stderr.decode(errors="replace") if isinstance(stderr, bytes) else stderr
         result = AgentResult("", True, "timeout", -1, stderr_text[-STDERR_TAIL:], duration, None, None)

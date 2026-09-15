@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from gitlab_claude_bot.gitlab import Kind, User
+from gitlab_claude_bot.gitlab import Kind, Project, User
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
@@ -21,14 +21,20 @@ class FakeGitLab:
         discussions: dict[tuple[int, Kind, int], list[dict]] | None = None,
         mrs: list[dict] | None = None,
         user_id: int = BOT.id,
+        projects: dict[int, Project] | None = None,
+        issues: dict[tuple[int, int], dict] | None = None,
     ):
         self.todos = todos or []
         self.threads = discussions or {}
         self.mrs = mrs or []
         self.user_id = user_id
+        self.projects = projects or {}
+        self.issues = issues or {}
         self.eyes: set[tuple[int, Kind, int, int | None, int]] = set()
         self.done: list[int] = []
         self.calls: list[tuple] = []
+        self.created_mrs: list[dict] = []
+        self.notes: list[tuple[str, int, Kind, int, str | None, str]] = []
 
     def pending_todos(self) -> list[dict]:
         self.calls.append(("pending_todos",))
@@ -56,3 +62,42 @@ class FakeGitLab:
     def has_eyes(self, project_id: int, kind: Kind, iid: int, note_id: int | None, user_id: int) -> bool:
         self.calls.append(("has_eyes", project_id, kind, iid, note_id, user_id))
         return (project_id, kind, iid, note_id, user_id) in self.eyes
+
+    def project(self, project_id: int) -> Project:
+        return self.projects[project_id]
+
+    def issue(self, project_id: int, iid: int) -> dict:
+        return self.issues[(project_id, iid)]
+
+    def merge_request(self, project_id: int, iid: int) -> dict:
+        return next(mr for mr in self.mrs if mr["project_id"] == project_id and mr["iid"] == iid)
+
+    def project_open_mrs_by(self, project_id: int, author_id: int) -> list[dict]:
+        return [mr for mr in self.mrs if mr["project_id"] == project_id and mr["author"]["id"] == author_id]
+
+    def create_mr(
+        self, project_id: int, source: str, target: str, title: str, description: str, assignee_id: int | None
+    ) -> dict:
+        mr = {
+            "id": 5000 + len(self.created_mrs),
+            "iid": 50 + len(self.created_mrs),
+            "project_id": project_id,
+            "source_project_id": project_id,
+            "source_branch": source,
+            "target_branch": target,
+            "title": title,
+            "description": description,
+            "assignee_ids": [assignee_id] if assignee_id is not None else [],
+            "author": {"id": self.user_id},
+        }
+        self.created_mrs.append(mr)
+        self.mrs.append(mr)
+        return mr
+
+    def reply(self, project_id: int, kind: Kind, iid: int, discussion_id: str, body: str) -> dict:
+        self.notes.append(("reply", project_id, kind, iid, discussion_id, body))
+        return {"id": 900 + len(self.notes), "body": body}
+
+    def comment(self, project_id: int, kind: Kind, iid: int, body: str) -> dict:
+        self.notes.append(("comment", project_id, kind, iid, None, body))
+        return {"id": 900 + len(self.notes), "body": body}
