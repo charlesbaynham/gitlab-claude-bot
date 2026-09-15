@@ -1,0 +1,10 @@
+.git
+.venv
+.env
+__pycache__
+tests
+nix
+*.md
+!README.md
+state
+work
