@@ -170,7 +170,7 @@ def docker_command(cfg: Config, jobdir: Path, system_prompt: str, bot: User, job
     env_args += [arg for name, value in env_values.items() for arg in ("-e", f"{name}={value}")]
     budget = ["--max-budget-usd", str(cfg.max_budget_usd)] if cfg.max_budget_usd is not None else []
     return [
-        "docker", "run", "--rm", "--name", container_name(job_name),
+        "docker", "run", "--rm", "-i", "--name", container_name(job_name),
         "--user", "1000:1000", "--read-only",
         "--tmpfs", "/home/agent:rw,uid=1000,gid=1000,size=512m",
         "--tmpfs", "/tmp:rw,size=1g",
