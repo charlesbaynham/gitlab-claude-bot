@@ -1,0 +1,20 @@
+services:
+  bot:
+    build: .
+    env_file: .env
+    environment:
+      STATE_DIR: /state
+    user: "1000:1000"
+    # must match the host's docker group: getent group docker | cut -d: -f3
+    group_add:
+      - "${DOCKER_GID:-999}"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      # must be writable by uid 1000 on the host
+      - ./state:/state
+      # the HOST's dockerd bind-mounts the job dir into each sibling container,
+      # so the path must be identical inside this container and out
+      - ${WORK_DIR:?set WORK_DIR in .env}:${WORK_DIR}
+    ports:
+      - "127.0.0.1:${HEALTH_PORT:-8000}:${HEALTH_PORT:-8000}"
+    restart: unless-stopped
