@@ -254,7 +254,7 @@ def test_askpass_script_prints_token_from_env(tmp_path: Path) -> None:
 
 
 DOCKER_PREFIX = [
-    "docker", "run", "--rm", "--name", "gcb-job-9",
+    "docker", "run", "--rm", "-i", "--name", "gcb-job-9",
     "--user", "1000:1000", "--read-only",
     "--tmpfs", "/home/agent:rw,uid=1000,gid=1000,size=512m",
     "--tmpfs", "/tmp:rw,size=1g",
