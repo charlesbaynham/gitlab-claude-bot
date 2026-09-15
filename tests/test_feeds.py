@@ -109,10 +109,10 @@ def test_first_run_polls_all_open_mrs() -> None:
     assert gl.calls[0] == ("bot_open_mrs", BOT.id, None)
 
 
-def test_overlap_window_on_later_runs() -> None:
+def test_later_runs_still_poll_all_open_mrs() -> None:
     gl = mr_gl()
     own_mr_triggers(gl, BOT, State(last_mr_poll="2026-09-15T11:30:00+00:00"), ALLOWED, NOW)
-    assert gl.calls[0] == ("bot_open_mrs", BOT.id, "2026-09-15T11:25:00+00:00")
+    assert gl.calls[0] == ("bot_open_mrs", BOT.id, None)
 
 
 def test_three_notes_across_two_discussions_make_one_trigger() -> None:

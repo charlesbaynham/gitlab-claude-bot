@@ -1,7 +1,7 @@
 import logging
 from collections import defaultdict
 from dataclasses import replace
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime
 from operator import itemgetter
 
 from .gitlab import GitLab, Kind, User
@@ -12,7 +12,6 @@ log = logging.getLogger(__name__)
 
 TODO_ACTIONS: dict[str, Action] = {"assigned": "assigned", "mentioned": "mentioned", "directly_addressed": "mentioned"}
 TARGET_KINDS: dict[str, Kind] = {"Issue": "issues", "MergeRequest": "merge_requests"}
-MR_POLL_OVERLAP = timedelta(minutes=5)
 
 
 def _from_bot(author: dict, bot: User) -> bool:
@@ -73,12 +72,9 @@ def todo_triggers(gl: GitLab, bot: User, allowed: frozenset[str]) -> tuple[list[
 def own_mr_triggers(
     gl: GitLab, bot: User, state: State, allowed: frozenset[str], now: datetime
 ) -> list[Trigger]:
-    updated_after = None
-    if state.last_mr_poll:
-        updated_after = (datetime.fromisoformat(state.last_mr_poll) - MR_POLL_OVERLAP).isoformat()
-
     triggers = []
-    for mr in gl.bot_open_mrs(bot.id, updated_after):
+    # a note does not touch the MR's updated_at, so no updated_after filter is possible
+    for mr in gl.bot_open_mrs(bot.id):
         target = Target(mr["project_id"], "merge_requests", mr["iid"])
         notes = sorted(
             ((n, d["id"]) for d in gl.discussions(target.project_id, target.kind, target.iid) for n in d["notes"]),

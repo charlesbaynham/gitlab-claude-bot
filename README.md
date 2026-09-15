@@ -12,7 +12,7 @@ There is no per-project configuration: the bot is added once to a group and work
 
 ## How it works
 
-Every `POLL_INTERVAL` seconds the daemon reads two feeds: the bot's pending to-do list (assignments and mentions) and the comments added to its own open merge requests since the last poll. Both are filtered to `ALLOWED_USERS`, and to-dos the bot cannot act on are marked done so the list stays short.
+Every `POLL_INTERVAL` seconds the daemon reads two feeds: the bot's pending to-do list (assignments and mentions) and the comments on every one of its own open merge requests — all of them, every poll, since posting a note doesn't change an MR's `updated_at` so there's no cheaper filter to apply. Both are filtered to `ALLOWED_USERS`, and to-dos the bot cannot act on are marked done so the list stays short.
 
 Before a job starts, the bot awards 👀 to the note that triggered it. That award is the record that the work is claimed: a note already wearing the bot's 👀 is never picked up again, which is what makes a crash, a restart or an overlapping poll safe.
 
