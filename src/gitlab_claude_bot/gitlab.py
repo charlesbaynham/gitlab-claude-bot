@@ -1,46 +1,21 @@
 import logging
 import time
 from collections.abc import Iterator
-from dataclasses import dataclass
-from typing import Any, Literal
+from typing import Any
 
 import httpx
+
+from .forge import GITLAB, ForgeError, Kind, Project, User, retry_after
+
+__all__ = ["GitLab", "GitLabError", "Kind", "Project", "User"]
 
 log = logging.getLogger(__name__)
 _sleep = time.sleep
 
-Kind = Literal["issues", "merge_requests"]
 
-
-class GitLabError(Exception):
+class GitLabError(ForgeError):
     def __init__(self, status: int, body: str):
-        super().__init__(f"GitLab returned {status}: {body[:200]}")
-        self.status = status
-        self.body = body
-
-
-@dataclass(frozen=True)
-class User:
-    id: int
-    username: str
-    name: str
-    email: str | None
-    bot: bool = False
-
-
-@dataclass(frozen=True)
-class Project:
-    id: int
-    path_with_namespace: str
-    default_branch: str
-    http_url_to_repo: str
-
-
-def _retry_after(response: httpx.Response) -> int:
-    try:
-        return min(int(response.headers.get("Retry-After", 1)), 60)
-    except ValueError:
-        return 60
+        super().__init__("GitLab", status, body)
 
 
 def _target(project_id: int, kind: Kind, iid: int) -> str:
@@ -48,7 +23,11 @@ def _target(project_id: int, kind: Kind, iid: int) -> str:
 
 
 class GitLab:
+    labels = GITLAB
+    git_user = "oauth2"
+
     def __init__(self, url: str, token: str, transport: httpx.BaseTransport | None = None):
+        self.token = token
         self._client = httpx.Client(
             base_url=f"{url}/api/v4",
             headers={"PRIVATE-TOKEN": token},
@@ -60,7 +39,7 @@ class GitLab:
     def _request(self, method: str, path: str, **kwargs: Any) -> httpx.Response:
         response = self._client.request(method, path, **kwargs)
         if response.status_code == 429:
-            wait = _retry_after(response)
+            wait = retry_after(response)
             log.debug("%s %s rate limited, retrying in %ss", method, path, wait)
             _sleep(wait)
             response = self._client.request(method, path, **kwargs)

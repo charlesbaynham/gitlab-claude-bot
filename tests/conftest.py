@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from gitlab_claude_bot.gitlab import Kind, Project, User
+from gitlab_claude_bot.forge import GITLAB, Kind, Project, User
 
 FIXTURES = Path(__file__).parent / "fixtures"
 
@@ -15,6 +15,10 @@ def fixture(name: str) -> Any:
 
 
 class FakeGitLab:
+    labels = GITLAB
+    token = "token"
+    git_user = "oauth2"
+
     def __init__(
         self,
         todos: list[dict] | None = None,

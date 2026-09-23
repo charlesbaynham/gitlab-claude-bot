@@ -25,7 +25,7 @@ def test_all_required_present() -> None:
     assert cfg.gitlab_url == "https://gitlab.com"
     assert cfg.gitlab_token == "glpat-x"
     assert cfg.claude_env == {"CLAUDE_CODE_OAUTH_TOKEN": "oauth-x"}
-    assert cfg.allowed_users == frozenset({"alice", "bob"})
+    assert cfg.gitlab_allowed_users == frozenset({"alice", "bob"})
     assert cfg.agent_image == "ghcr.io/x/agent:1"
     assert cfg.state_dir == Path("/var/lib/bot")
     assert cfg.work_dir == Path("/var/lib/bot/work")
@@ -117,7 +117,7 @@ def test_all_problems_reported_together() -> None:
 
 def test_allowed_users_normalised() -> None:
     cfg = Config.from_env(GOOD | {"ALLOWED_USERS": " Alice , BOB,, carol "})
-    assert cfg.allowed_users == frozenset({"alice", "bob", "carol"})
+    assert cfg.gitlab_allowed_users == frozenset({"alice", "bob", "carol"})
 
 
 def test_allowed_users_only_separators_rejected() -> None:
@@ -126,3 +126,31 @@ def test_allowed_users_only_separators_rejected() -> None:
 
 def test_bad_budget_rejected() -> None:
     assert "MAX_BUDGET_USD" in error_for(GOOD | {"MAX_BUDGET_USD": "lots"})
+
+
+def test_github_only() -> None:
+    env = {k: v for k, v in GOOD.items() if k != "GITLAB_TOKEN"}
+    cfg = Config.from_env(env | {"GITHUB_TOKEN": "ghp-x"})
+    assert (cfg.gitlab_token, cfg.github_token) == ("", "ghp-x")
+    assert cfg.github_url == "https://api.github.com"
+    assert cfg.github_allowed_users == frozenset({"alice", "bob"})
+
+
+def test_neither_forge_token_rejected() -> None:
+    env = {k: v for k, v in GOOD.items() if k != "GITLAB_TOKEN"}
+    assert "GITLAB_TOKEN or GITHUB_TOKEN" in error_for(env)
+
+
+def test_per_forge_allowed_users_override_the_shared_list() -> None:
+    env = {k: v for k, v in GOOD.items() if k != "ALLOWED_USERS"}
+    cfg = Config.from_env(
+        env | {"GITHUB_TOKEN": "ghp-x", "GITLAB_ALLOWED_USERS": "alice", "GITHUB_ALLOWED_USERS": "Alice-GH"}
+    )
+    assert cfg.gitlab_allowed_users == frozenset({"alice"})
+    assert cfg.github_allowed_users == frozenset({"alice-gh"})
+
+
+def test_each_enabled_forge_needs_allowed_users() -> None:
+    env = {k: v for k, v in GOOD.items() if k != "ALLOWED_USERS"}
+    message = error_for(env | {"GITHUB_TOKEN": "ghp-x", "GITLAB_ALLOWED_USERS": "alice"})
+    assert message == "ALLOWED_USERS or GITHUB_ALLOWED_USERS is required"

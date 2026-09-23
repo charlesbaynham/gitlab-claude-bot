@@ -11,11 +11,11 @@ from typing import Any
 from urllib.parse import urlsplit, urlunsplit
 
 from .config import Config
-from .gitlab import Project, User
+from .forge import Project, User
 
 log = logging.getLogger(__name__)
 
-ASKPASS = "#!/bin/sh\nprintf '%s\\n' \"$GITLAB_TOKEN\"\n"
+ASKPASS = "#!/bin/sh\nprintf '%s\\n' \"$GCB_GIT_TOKEN\"\n"
 STDERR_TAIL = 4096
 BAD_OUTPUT_HEAD = 2048
 
@@ -58,6 +58,12 @@ class JobDir:
 
 
 @dataclass(frozen=True)
+class GitAuth:
+    user: str
+    token: str
+
+
+@dataclass(frozen=True)
 class Repo:
     path: Path
     base_ref: str
@@ -73,11 +79,11 @@ def askpass_script(state_dir: Path) -> Path:
     return script
 
 
-def _auth_env(cfg: Config) -> dict[str, str]:
+def _auth_env(cfg: Config, auth: GitAuth) -> dict[str, str]:
     return {
         "GIT_ASKPASS": str(askpass_script(cfg.state_dir)),
         "GIT_TERMINAL_PROMPT": "0",
-        "GITLAB_TOKEN": cfg.gitlab_token,
+        "GCB_GIT_TOKEN": auth.token,
     }
 
 
@@ -101,31 +107,33 @@ def _git(
     return proc
 
 
-def clone_url(http_url_to_repo: str) -> str:
+def clone_url(http_url_to_repo: str, user: str = "oauth2") -> str:
     parts = urlsplit(http_url_to_repo)
     if parts.scheme not in ("http", "https"):
         return http_url_to_repo
     host = parts.hostname or ""
     if parts.port:
         host = f"{host}:{parts.port}"
-    return urlunsplit(parts._replace(netloc=f"oauth2@{host}"))
+    return urlunsplit(parts._replace(netloc=f"{user}@{host}"))
 
 
 def bot_email(bot: User) -> str:
     return bot.email or f"{bot.username}@users.noreply.gitlab.com"
 
 
-def clone(cfg: Config, project: Project, branch: str, dest: Path, bot: User, default_branch: str) -> Repo:
-    auth = _auth_env(cfg)
+def clone(
+    cfg: Config, auth: GitAuth, project: Project, branch: str, dest: Path, bot: User, default_branch: str
+) -> Repo:
+    env = _auth_env(cfg, auth)
     depth = str(cfg.clone_depth)
-    url = clone_url(project.http_url_to_repo)
+    url = clone_url(project.http_url_to_repo, auth.user)
     dest.parent.mkdir(parents=True, exist_ok=True)
-    _git(dest.parent, "clone", "--depth", depth, "--branch", branch, "--single-branch", url, str(dest), env_extra=auth)
+    _git(dest.parent, "clone", "--depth", depth, "--branch", branch, "--single-branch", url, str(dest), env_extra=env)
     repo = Repo(path=dest, base_ref=f"origin/{branch}")
     if branch != default_branch:
         # --single-branch narrowed the fetch refspec, so name the tracking ref or it lands in FETCH_HEAD only
         tracking = f"{default_branch}:refs/remotes/origin/{default_branch}"
-        _git(repo, "fetch", "--depth", depth, "origin", tracking, env_extra=auth)
+        _git(repo, "fetch", "--depth", depth, "origin", tracking, env_extra=env)
     _git(repo, "config", "user.name", bot.name)
     _git(repo, "config", "user.email", bot_email(bot))
     exclude = dest / ".git" / "info" / "exclude"
@@ -261,8 +269,8 @@ def commit_leftovers(repo: Repo, message: str) -> bool:
     return True
 
 
-def push(cfg: Config, repo: Repo, branch: str) -> None:
-    _git(repo, "push", "-u", "origin", branch, env_extra=_auth_env(cfg))
+def push(cfg: Config, auth: GitAuth, repo: Repo, branch: str) -> None:
+    _git(repo, "push", "-u", "origin", branch, env_extra=_auth_env(cfg, auth))
 
 
 def diff_stat(repo: Repo) -> str:

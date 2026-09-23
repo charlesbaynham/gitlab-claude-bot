@@ -11,6 +11,7 @@ from gitlab_claude_bot.config import Config
 from gitlab_claude_bot.gitlab import Project, User
 from gitlab_claude_bot.runner import (
     Changes,
+    GitAuth,
     JobDir,
     JobError,
     Repo,
@@ -28,6 +29,7 @@ from gitlab_claude_bot.runner import (
 
 BOT = User(id=7, username="gcb", name="GCB Bot", email="bot@example.com")
 HTTPS_URL = "https://gitlab.example.com/group/proj.git"
+AUTH = GitAuth("oauth2", "glpat-secret")
 
 
 def config(tmp_path: Path, **overrides: object) -> Config:
@@ -35,7 +37,7 @@ def config(tmp_path: Path, **overrides: object) -> Config:
         gitlab_url="https://gitlab.example.com",
         gitlab_token="glpat-secret",
         claude_env={"CLAUDE_CODE_OAUTH_TOKEN": "oauth-secret"},
-        allowed_users=frozenset({"alice"}),
+        gitlab_allowed_users=frozenset({"alice"}),
         agent_image="ghcr.io/x/agent:1",
         state_dir=tmp_path / "state",
         work_dir=tmp_path / "work",
@@ -94,7 +96,7 @@ def cfg(tmp_path: Path) -> Config:
 
 @pytest.fixture
 def repo(cfg: Config, project: Project, tmp_path: Path) -> Repo:
-    return clone(cfg, project, "main", tmp_path / "work" / "job", BOT, "main")
+    return clone(cfg, AUTH, project, "main", tmp_path / "work" / "job", BOT, "main")
 
 
 def test_clone_url_adds_oauth2_user_to_http_only() -> None:
@@ -123,7 +125,7 @@ def test_clone_never_writes_token_into_tree(repo: Repo) -> None:
 
 
 def test_clone_of_non_default_branch_fetches_default(cfg: Config, project: Project, tmp_path: Path) -> None:
-    repo = clone(cfg, project, "feature", tmp_path / "work" / "job", BOT, "main")
+    repo = clone(cfg, AUTH, project, "feature", tmp_path / "work" / "job", BOT, "main")
     assert repo.base_ref == "origin/feature"
     assert (repo.path / "feature.txt").exists()
     assert git(repo.path, "rev-parse", "--verify", "origin/main")
@@ -132,12 +134,12 @@ def test_clone_of_non_default_branch_fetches_default(cfg: Config, project: Proje
 
 def test_clone_of_missing_branch_raises(cfg: Config, project: Project, tmp_path: Path) -> None:
     with pytest.raises(JobError, match="clone"):
-        clone(cfg, project, "nope", tmp_path / "work" / "job", BOT, "main")
+        clone(cfg, AUTH, project, "nope", tmp_path / "work" / "job", BOT, "main")
 
 
 def test_noreply_email_when_bot_has_none(cfg: Config, project: Project, tmp_path: Path) -> None:
     bot = User(id=7, username="gcb", name="GCB Bot", email=None)
-    repo = clone(cfg, project, "main", tmp_path / "work" / "job", bot, "main")
+    repo = clone(cfg, AUTH, project, "main", tmp_path / "work" / "job", bot, "main")
     assert git(repo.path, "config", "user.email").strip() == "gcb@users.noreply.gitlab.com"
 
 
@@ -194,7 +196,7 @@ def test_push_lands_branch_in_remote(cfg: Config, repo: Repo, bare: Path) -> Non
     create_branch(repo, "gcb/work")
     (repo.path / "pushed.txt").write_text("p\n")
     commit_leftovers(repo, "pushed commit")
-    push(cfg, repo, "gcb/work")
+    push(cfg, AUTH, repo, "gcb/work")
     assert git(bare, "log", "-1", "--format=%s", "gcb/work").strip() == "pushed commit"
     assert git(repo.path, "config", "branch.gcb/work.merge").strip() == "refs/heads/gcb/work"
 
@@ -209,7 +211,7 @@ def test_push_is_not_forced(cfg: Config, repo: Repo, bare: Path, tmp_path: Path)
     (repo.path / "mine.txt").write_text("m\n")
     commit_leftovers(repo, "mine")
     with pytest.raises(JobError, match="push"):
-        push(cfg, repo, "main")
+        push(cfg, AUTH, repo, "main")
     assert git(bare, "log", "-1", "--format=%s", "main").strip() == "someone else"
 
 
@@ -248,7 +250,7 @@ def test_askpass_script_prints_token_from_env(tmp_path: Path) -> None:
     assert script == tmp_path / "state" / "bin" / "askpass"
     assert stat.S_IMODE(script.stat().st_mode) == 0o700
     assert stat.S_IMODE(script.parent.stat().st_mode) == 0o700
-    out = subprocess.run([str(script), "Password for x:"], capture_output=True, text=True, env={"GITLAB_TOKEN": "tok"})
+    out = subprocess.run([str(script), "Password for x:"], capture_output=True, text=True, env={"GCB_GIT_TOKEN": "tok"})
     assert out.stdout == "tok\n"
     assert askpass_script(tmp_path / "state") == script
 

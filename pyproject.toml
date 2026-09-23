@@ -1,7 +1,7 @@
 [project]
 name = "gitlab-claude-bot"
 version = "0.1.0"
-description = "A polling bot that runs Claude Code against GitLab to-dos and merge request comments"
+description = "A polling bot that runs Claude Code against GitLab and GitHub assignments, mentions and merge/pull request comments"
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.12"

@@ -8,7 +8,6 @@ class ConfigError(Exception):
 
 
 CLAUDE_CREDENTIALS = ("CLAUDE_CODE_OAUTH_TOKEN", "ANTHROPIC_API_KEY")
-REQUIRED = ("GITLAB_TOKEN", "ALLOWED_USERS", "AGENT_IMAGE", "STATE_DIR", "WORK_DIR")
 
 
 @dataclass(frozen=True)
@@ -16,10 +15,13 @@ class Config:
     gitlab_url: str
     gitlab_token: str
     claude_env: dict[str, str]
-    allowed_users: frozenset[str]
+    gitlab_allowed_users: frozenset[str]
     agent_image: str
     state_dir: Path
     work_dir: Path
+    github_url: str = "https://api.github.com"
+    github_token: str = ""
+    github_allowed_users: frozenset[str] = frozenset()
     poll_interval: int = 30
     job_timeout: int = 1800
     max_budget_usd: float | None = None
@@ -53,17 +55,33 @@ class Config:
                 problems.append(f"{name} must be an integer, got {raw!r}")
                 return default
 
+        def given(*names: str) -> bool:
+            return any(env.get(n, "").strip() for n in names)
+
+        def users(name: str) -> frozenset[str]:
+            raw = value(name)
+            names = frozenset(u.strip().lower() for u in raw.split(",") if u.strip())
+            if raw and not names:
+                problems.append(f"{name} has no usernames")
+            return names
+
         gitlab_url = (value("GITLAB_URL") or "https://gitlab.com").rstrip("/")
-        gitlab_token = required("GITLAB_TOKEN")
+        gitlab_token = value("GITLAB_TOKEN")
+        github_url = (value("GITHUB_URL") or "https://api.github.com").rstrip("/")
+        github_token = value("GITHUB_TOKEN")
+        if not given("GITLAB_TOKEN", "GITHUB_TOKEN"):
+            problems.append("GITLAB_TOKEN or GITHUB_TOKEN is required")
 
         claude_env = {n: v for n in CLAUDE_CREDENTIALS if (v := value(n))}
         if len(claude_env) != 1:
             problems.append(f"exactly one of {' / '.join(CLAUDE_CREDENTIALS)} is required")
 
-        allowed_raw = required("ALLOWED_USERS")
-        allowed_users = frozenset(u.strip().lower() for u in allowed_raw.split(",") if u.strip())
-        if allowed_raw and not allowed_users:
-            problems.append("ALLOWED_USERS has no usernames")
+        shared_users = users("ALLOWED_USERS")
+        gitlab_allowed_users = users("GITLAB_ALLOWED_USERS") or shared_users
+        github_allowed_users = users("GITHUB_ALLOWED_USERS") or shared_users
+        for token, forge in (("GITLAB_TOKEN", "GITLAB"), ("GITHUB_TOKEN", "GITHUB")):
+            if given(token) and not given("ALLOWED_USERS", f"{forge}_ALLOWED_USERS"):
+                problems.append(f"ALLOWED_USERS or {forge}_ALLOWED_USERS is required")
 
         agent_image = required("AGENT_IMAGE")
         state_dir = Path(required("STATE_DIR"))
@@ -84,10 +102,13 @@ class Config:
             gitlab_url=gitlab_url,
             gitlab_token=gitlab_token,
             claude_env=claude_env,
-            allowed_users=allowed_users,
+            gitlab_allowed_users=gitlab_allowed_users,
             agent_image=agent_image,
             state_dir=state_dir,
             work_dir=work_dir,
+            github_url=github_url,
+            github_token=github_token,
+            github_allowed_users=github_allowed_users,
             poll_interval=number("POLL_INTERVAL", 30),
             job_timeout=number("JOB_TIMEOUT", 1800),
             max_budget_usd=max_budget_usd,

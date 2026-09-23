@@ -4,7 +4,8 @@ from dataclasses import replace
 from datetime import UTC, datetime
 from operator import itemgetter
 
-from .gitlab import GitLab, Kind, User
+from .forge import Forge, Kind, User
+from .gitlab import GitLab
 from .state import State
 from .triggers import Action, Target, Trigger, note_id_from_url
 
@@ -70,7 +71,7 @@ def todo_triggers(gl: GitLab, bot: User, allowed: frozenset[str]) -> tuple[list[
 
 
 def own_mr_triggers(
-    gl: GitLab, bot: User, state: State, allowed: frozenset[str], now: datetime
+    gl: Forge, bot: User, state: State, allowed: frozenset[str], now: datetime
 ) -> list[Trigger]:
     triggers = []
     # a note does not touch the MR's updated_at, so no updated_after filter is possible
