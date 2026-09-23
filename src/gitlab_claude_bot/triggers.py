@@ -3,7 +3,7 @@ import re
 from dataclasses import dataclass
 from typing import Literal
 
-from .gitlab import GitLab, Kind
+from .forge import Forge, Kind
 
 log = logging.getLogger(__name__)
 
@@ -39,7 +39,7 @@ def note_id_from_url(target_url: str) -> int | None:
     return int(match.group(1)) if match else None
 
 
-def acknowledge(gl: GitLab, bot_id: int, trigger: Trigger) -> bool:
+def acknowledge(gl: Forge, bot_id: int, trigger: Trigger) -> bool:
     t = trigger.target
     fresh = 0
     for note_id in trigger.note_ids or (None,):

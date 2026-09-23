@@ -15,8 +15,17 @@ let
   # Values are already in the environment via EnvironmentFile when this runs.
   checkSecretsScript = pkgs.writeShellScript "gitlab-claude-bot-check-secrets" ''
     set -eu
-    if [ -z "''${GITLAB_TOKEN:-}" ] || [ "''${GITLAB_TOKEN:-}" = CHANGEME ]; then
-      echo "gitlab-claude-bot: GITLAB_TOKEN is missing or still a placeholder in ${secretsFile}" >&2
+    forge=
+    for var in GITLAB_TOKEN GITHUB_TOKEN; do
+      val="$(eval printf '%s' "\''${$var:-}")"
+      if [ "$val" = CHANGEME ]; then
+        echo "gitlab-claude-bot: $var is still a placeholder in ${secretsFile}" >&2
+        exit 1
+      fi
+      if [ -n "$val" ]; then forge=1; fi
+    done
+    if [ -z "$forge" ]; then
+      echo "gitlab-claude-bot: set GITLAB_TOKEN, GITHUB_TOKEN or both in ${secretsFile}" >&2
       exit 1
     fi
     for var in CLAUDE_CODE_OAUTH_TOKEN ANTHROPIC_API_KEY; do
@@ -51,13 +60,13 @@ in
     allowedUsers = lib.mkOption {
       type = lib.types.listOf lib.types.str;
       default = [ ];
-      description = "GitLab usernames whose to-dos and comments the bot acts on. Empty leaves ALLOWED_USERS to the secrets file.";
+      description = "Usernames whose assignments, mentions and comments the bot acts on, on every forge. Empty leaves ALLOWED_USERS (and GITLAB_/GITHUB_ALLOWED_USERS) to the secrets file.";
     };
 
     pollInterval = lib.mkOption {
       type = lib.types.ints.positive;
       default = 30;
-      description = "Seconds between GitLab polls.";
+      description = "Seconds between polls.";
     };
 
     jobTimeout = lib.mkOption {

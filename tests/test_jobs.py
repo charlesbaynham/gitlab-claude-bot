@@ -4,8 +4,9 @@ import pytest
 from conftest import ALLOWED, BOT, FakeGitLab
 from gitlab_claude_bot import jobs, runner
 from gitlab_claude_bot.config import Config
+from gitlab_claude_bot.forge import GITHUB
 from gitlab_claude_bot.gitlab import Project
-from gitlab_claude_bot.runner import AgentResult, Changes, JobError, Repo
+from gitlab_claude_bot.runner import AgentResult, Changes, GitAuth, JobError, Repo
 from gitlab_claude_bot.triggers import Target, Trigger
 
 PROJECT = Project(42, "group/app", "main", "https://gitlab.example/group/app.git")
@@ -35,7 +36,7 @@ def config(tmp_path: Path) -> Config:
         gitlab_url="https://gitlab.example",
         gitlab_token="token",
         claude_env={"ANTHROPIC_API_KEY": "key"},
-        allowed_users=ALLOWED,
+        gitlab_allowed_users=ALLOWED,
         agent_image="agent:test",
         state_dir=tmp_path / "state",
         work_dir=tmp_path / "work",
@@ -67,7 +68,9 @@ class FakeRunner:
         for name in ("clone", "create_branch", "run_agent", "harvest", "commit_leftovers", "push", "diff_stat"):
             monkeypatch.setattr(runner, name, getattr(self, name))
 
-    def clone(self, cfg: Config, project: Project, branch: str, dest: Path, bot: object, default: str) -> Repo:
+    def clone(
+        self, cfg: Config, auth: object, project: Project, branch: str, dest: Path, bot: object, default: str
+    ) -> Repo:
         self.cloned.append((project.id, branch))
         return Repo(path=dest, base_ref=f"origin/{branch}")
 
@@ -85,7 +88,7 @@ class FakeRunner:
         self.messages.append(message)
         return self.leftovers
 
-    def push(self, cfg: Config, repo: Repo, branch: str) -> None:
+    def push(self, cfg: Config, auth: object, repo: Repo, branch: str) -> None:
         if self.push_error:
             raise self.push_error
         self.pushed.append(branch)
@@ -261,3 +264,25 @@ def test_job_name_is_shell_safe() -> None:
     name = jobs.job_name(MR_COMMENT)
     assert name.startswith("42-me3-")
     assert name.replace("-", "").isalnum()
+
+
+def test_github_wording_in_replies(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    gl = issue_gl()
+    gl.labels = GITHUB
+    FakeRunner(monkeypatch)
+
+    assert jobs.run_job(gl, config(tmp_path), BOT, ASSIGNED, "job-1")
+
+    assert gl.notes == [("comment", 42, "issues", 7, None, "Opened #50: Rewrote the loader.")]
+
+
+def test_the_forge_credential_reaches_clone_and_push(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    gl, seen = issue_gl(), []
+    gl.token, gl.git_user = "ghp-secret", "x-access-token"
+    fake = FakeRunner(monkeypatch)
+    monkeypatch.setattr(runner, "clone", lambda cfg, auth, *args: (seen.append(auth), fake.clone(cfg, auth, *args))[1])
+    monkeypatch.setattr(runner, "push", lambda cfg, auth, *args: seen.append(auth))
+
+    jobs.run_job(gl, config(tmp_path), BOT, ASSIGNED, "job-1")
+
+    assert seen == [GitAuth("x-access-token", "ghp-secret")] * 2

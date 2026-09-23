@@ -5,8 +5,8 @@ from dataclasses import dataclass
 
 from . import prompt, runner
 from .config import Config
-from .gitlab import GitLab, Project, User
-from .runner import AgentResult
+from .forge import Forge, Project, User
+from .runner import AgentResult, GitAuth
 from .triggers import Trigger
 
 log = logging.getLogger(__name__)
@@ -23,7 +23,7 @@ def branch_name(iid: int, title: str) -> str:
     return "-".join(part for part in (f"{BRANCH_PREFIX}{iid}", slug(title)) if part)
 
 
-def find_existing_mr(gl: GitLab, project_id: int, bot_id: int, iid: int) -> dict | None:
+def find_existing_mr(gl: Forge, project_id: int, bot_id: int, iid: int) -> dict | None:
     own = f"{BRANCH_PREFIX}{iid}"
     for mr in gl.project_open_mrs_by(project_id, bot_id):
         if mr["source_branch"] == own or mr["source_branch"].startswith(f"{own}-"):
@@ -51,7 +51,7 @@ class _Plan:
         return self.new_branch or self.clone_branch
 
 
-def _plan(gl: GitLab, bot: User, trigger: Trigger) -> _Plan:
+def _plan(gl: Forge, bot: User, trigger: Trigger) -> _Plan:
     t = trigger.target
     project = gl.project(t.project_id)
     if t.kind == "merge_requests":
@@ -68,7 +68,7 @@ def _plan(gl: GitLab, bot: User, trigger: Trigger) -> _Plan:
     return _Plan(project, project, issue, project.default_branch, branch_name(t.iid, issue["title"]), None, True)
 
 
-def _reply(gl: GitLab, trigger: Trigger, body: str) -> None:
+def _reply(gl: Forge, trigger: Trigger, body: str) -> None:
     t = trigger.target
     if trigger.discussion_id:
         gl.reply(t.project_id, t.kind, t.iid, trigger.discussion_id, body)
@@ -82,12 +82,13 @@ def _agent_failure(result: AgentResult, cfg: Config) -> str:
     return f"I couldn't complete this: the agent run failed ({result.subtype or 'unknown'})."
 
 
-def _pushed_reply(gl: GitLab, trigger: Trigger, plan: _Plan, text: str, stat: str) -> str:
+def _pushed_reply(gl: Forge, trigger: Trigger, plan: _Plan, text: str, stat: str) -> str:
     t = trigger.target
+    sigil = gl.labels.mr_sigil
     if t.kind == "merge_requests":
         return f"{text}\n\n{stat}"
     if plan.existing_mr:
-        return f"Updated !{plan.existing_mr['iid']}.\n\n{text}"
+        return f"Updated {sigil}{plan.existing_mr['iid']}.\n\n{text}"
     mr = gl.create_mr(
         plan.project.id,
         plan.work_branch,
@@ -96,10 +97,10 @@ def _pushed_reply(gl: GitLab, trigger: Trigger, plan: _Plan, text: str, stat: st
         description=f"{text}\n\nCloses #{t.iid}".strip(),
         assignee_id=trigger.author_id,
     )
-    return f"Opened !{mr['iid']}: {text.splitlines()[0] if text else 'see the merge request.'}"
+    return f"Opened {sigil}{mr['iid']}: {text.splitlines()[0] if text else f'see the {gl.labels.mr}.'}"
 
 
-def _run(gl: GitLab, cfg: Config, bot: User, trigger: Trigger, name: str) -> bool:
+def _run(gl: Forge, cfg: Config, bot: User, trigger: Trigger, name: str) -> bool:
     t = trigger.target
     plan = _plan(gl, bot, trigger)
     ctx = prompt.Context(
@@ -112,16 +113,18 @@ def _run(gl: GitLab, cfg: Config, bot: User, trigger: Trigger, name: str) -> boo
         discussions=gl.discussions(t.project_id, t.kind, t.iid),
         trigger_note_ids=trigger.note_ids,
         trigger_body=None,
+        forge=gl.labels,
     )
+    auth = GitAuth(gl.git_user, gl.token)
 
     with runner.JobDir(cfg.work_dir, name) as jobdir:
-        repo = runner.clone(cfg, plan.clone_from, plan.clone_branch, jobdir, bot, plan.clone_from.default_branch)
+        repo = runner.clone(cfg, auth, plan.clone_from, plan.clone_branch, jobdir, bot, plan.clone_from.default_branch)
         if plan.new_branch:
             runner.create_branch(repo, plan.new_branch)
         result = runner.run_agent(
             cfg,
             jobdir,
-            prompt.system_prompt(bot.username),
+            prompt.system_prompt(bot.username, gl.labels),
             prompt.build(ctx, bot.username, trigger.action),
             bot,
             name,
@@ -141,16 +144,16 @@ def _run(gl: GitLab, cfg: Config, bot: User, trigger: Trigger, name: str) -> boo
 
         stat = f"```\n{runner.diff_stat(repo).strip()}\n```"
         if not plan.can_push:
-            fork = "I couldn't push these changes: this merge request comes from a fork, which the bot can't push to."
+            fork = f"I couldn't push these changes: this {gl.labels.mr} comes from a fork, which the bot can't push to."
             _reply(gl, trigger, f"{text}\n\n{fork}\n\n{stat}")
             return True
-        runner.push(cfg, repo, plan.work_branch)
+        runner.push(cfg, auth, repo, plan.work_branch)
 
     _reply(gl, trigger, _pushed_reply(gl, trigger, plan, text, stat))
     return True
 
 
-def run_job(gl: GitLab, cfg: Config, bot: User, trigger: Trigger, name: str | None = None) -> bool:
+def run_job(gl: Forge, cfg: Config, bot: User, trigger: Trigger, name: str | None = None) -> bool:
     name = name or job_name(trigger)
     log.info("job %s: %s on %s by @%s", name, trigger.action, trigger.target.key, trigger.author)
     try:
